@@ -1,18 +1,20 @@
 import { useState, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
-const IMG_ROSES = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/b9b189a7-2a9d-4224-84f0-cb3a6d7ee8.jpg";
+// Исправленные ссылки на фото
+const IMG_ROSES = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/b9b189a7-2a9d-4224-84f0-cb3a6af7ee8.jpg";
 const IMG_VENUE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/bucket/39c18553-489b-4637-b897-85ea05dac879.jpeg";
 const IMG_CUPID = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/81ec72d4-0bf2-4eba-a753-437f8967f78a.jpg";
 
+// Only Time — Enya (публичный CDN)
+const MUSIC_URL = "https://archive.org/download/EnyaOnlyTime/Enya%20-%20Only%20Time.mp3";
+
+// ВКонтакте: отправка сообщения по номеру телефона
+const VK_URL = "https://vk.com/write?phone=79028222722";
+
 const WavyPath = () => (
   <svg viewBox="0 0 120 300" className="absolute left-1/2 -translate-x-1/2" style={{ height: "100%", width: 80, top: 0, opacity: 0.35 }} fill="none">
-    <path
-      d="M60,0 C20,50 100,100 60,150 C20,200 100,250 60,300"
-      stroke="#7B1C2E"
-      strokeWidth="1.5"
-      fill="none"
-    />
+    <path d="M60,0 C20,50 100,100 60,150 C20,200 100,250 60,300" stroke="#7B1C2E" strokeWidth="1.5" fill="none" />
   </svg>
 );
 
@@ -24,11 +26,9 @@ const Script = ({ children, size = "2rem", color = "#7B1C2E", className = "" }: 
   </p>
 );
 
-const TimingRow = ({ time, title, sub }: { time: string; title: string; sub?: string }) => (
-  <div className="text-center py-5" style={{ borderBottom: "1px solid rgba(123,28,46,0.12)" }}>
-    <p className="font-cormorant" style={{ fontSize: "2.4rem", color: "#7B1C2E", fontWeight: 300, lineHeight: 1 }}>
-      {time}
-    </p>
+const TimingRow = ({ time, title, sub, last }: { time: string; title: string; sub?: string; last?: boolean }) => (
+  <div className="text-center py-5" style={{ borderBottom: last ? "none" : "1px solid rgba(123,28,46,0.12)" }}>
+    <p className="font-cormorant" style={{ fontSize: "2.4rem", color: "#7B1C2E", fontWeight: 300, lineHeight: 1 }}>{time}</p>
     <p className="font-script mt-1" style={{ fontSize: "1.3rem", color: "#2a1a1a" }}>{title}</p>
     {sub && <p className="font-sans-inv mt-1" style={{ fontSize: "0.65rem", color: "#888", letterSpacing: "0.08em" }}>{sub}</p>}
   </div>
@@ -43,44 +43,61 @@ export default function Index() {
 
   const toggleMusic = () => {
     if (!audioRef.current) return;
-    if (playing) { audioRef.current.pause(); setPlaying(false); }
-    else { audioRef.current.play().catch(() => {}); setPlaying(true); }
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+    } else {
+      audioRef.current.play().catch(() => {});
+      setPlaying(true);
+    }
   };
 
-  const handleAudioReady = () => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.4;
-      audioRef.current.play().then(() => setPlaying(true)).catch(() => {});
-    }
+  const handleRsvp = () => {
+    if (!name.trim()) return;
+    const msg = encodeURIComponent(
+      `Ответ на приглашение Евгения и Софии (22.07.2026)\nИмя: ${name}\nПриду: ${attend === "yes" ? "Да ✓" : "Нет ✗"}`
+    );
+    window.open(`${VK_URL}&message=${msg}`, "_blank");
+    setRsvpSent(true);
   };
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-start py-10 px-4"
+      className="min-h-screen flex flex-col items-center justify-start pb-10 px-4"
       style={{ background: "linear-gradient(160deg, #6B1422 0%, #8B1A2A 40%, #6B1422 100%)" }}
     >
-      {/* Background music — autoplay on load */}
-      <audio ref={audioRef} loop onCanPlayThrough={handleAudioReady}>
-        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg" />
+      {/* Audio */}
+      <audio ref={audioRef} loop>
+        <source src={MUSIC_URL} type="audio/mpeg" />
       </audio>
 
-      {/* Music toggle */}
-      <button
-        onClick={toggleMusic}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2 rounded-full shadow-lg transition-all"
-        style={{
-          background: playing ? "rgba(123,28,46,0.95)" : "rgba(255,255,255,0.92)",
-          color: playing ? "#fff" : "#7B1C2E",
-          border: "1px solid rgba(123,28,46,0.3)",
-          fontFamily: "'Montserrat', sans-serif",
-          fontSize: "0.65rem",
-          letterSpacing: "0.12em",
-          textTransform: "uppercase",
-        }}
+      {/* ===== TOP MUSIC BAR ===== */}
+      <div
+        className="w-full flex items-center justify-center py-3 px-6 mb-6 gap-4"
+        style={{ background: "rgba(0,0,0,0.25)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}
       >
-        <Icon name={playing ? "Pause" : "Music"} size={14} />
-        {playing ? "Пауза" : "Музыка"}
-      </button>
+        <button
+          onClick={toggleMusic}
+          className="flex items-center gap-2 px-5 py-2 rounded-full transition-all"
+          style={{
+            background: playing ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.9)",
+            color: playing ? "#fff" : "#7B1C2E",
+            border: "1px solid rgba(255,255,255,0.3)",
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: "0.68rem",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+          }}
+        >
+          <Icon name={playing ? "Pause" : "Play"} size={14} />
+          {playing ? "Пауза" : "Включить музыку"}
+        </button>
+        {playing && (
+          <p className="font-cormorant" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", fontStyle: "italic" }}>
+            ♫ Enya — Only Time
+          </p>
+        )}
+      </div>
 
       {/* Header */}
       <div className="text-center mb-8 opacity-0 animate-fade-in" style={{ animationFillMode: "forwards" }}>
@@ -94,22 +111,29 @@ export default function Index() {
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
 
         {/* === COLUMN 1 — LEFT === */}
-        <div
-          className="inv-card flex flex-col opacity-0 animate-fade-in-up"
-          style={{ animationFillMode: "forwards", background: "#f5f0eb" }}
-        >
-          {/* Top script */}
+        <div className="inv-card flex flex-col opacity-0 animate-fade-in-up" style={{ animationFillMode: "forwards", background: "#f5f0eb" }}>
           <div className="px-7 pt-8 pb-4 text-center">
             <Script size="1.5rem" color="#7B1C2E">Мы женимся!</Script>
             <p className="font-script mt-1" style={{ fontSize: "1.15rem", color: "#a0333f" }}>и счастливы пригласить вас</p>
           </div>
 
-          {/* Roses photo instead of couple */}
+          {/* Roses */}
           <div className="px-6 mb-2">
             <div className="relative rounded-sm overflow-hidden" style={{ border: "3px solid #fff", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
-              <img src={IMG_ROSES} alt="Букет" className="w-full object-cover" style={{ height: 200 }} />
+              <img
+                src={IMG_ROSES}
+                alt="Букет роз"
+                className="w-full object-cover"
+                style={{ height: 200 }}
+                onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+              />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 60%, rgba(245,240,235,0.25))" }} />
             </div>
+          </div>
+
+          {/* Розы-декор если фото не грузится */}
+          <div className="flex justify-center gap-2 my-1" style={{ fontSize: "1.8rem" }}>
+            🌹🌹🌹
           </div>
 
           {/* Save the date */}
@@ -124,10 +148,15 @@ export default function Index() {
 
           {/* Cupid */}
           <div className="flex justify-center my-2">
-            <img src={IMG_CUPID} alt="Купидон" className="object-contain" style={{ width: 120, height: 120, mixBlendMode: "multiply" }} />
+            <img
+              src={IMG_CUPID}
+              alt="Купидон"
+              className="object-contain"
+              style={{ width: 120, height: 120, mixBlendMode: "multiply" }}
+              onError={e => { (e.target as HTMLImageElement).replaceWith(Object.assign(document.createElement("div"), { textContent: "💘", style: "font-size:4rem;text-align:center" })); }}
+            />
           </div>
 
-          {/* Greeting */}
           <div className="px-7 pb-8 text-center">
             <p className="font-cormorant leading-relaxed" style={{ color: "#555", fontSize: "0.95rem", fontStyle: "italic" }}>
               Мы так счастливы пригласить вас разделить с нами радость нашей любви...
@@ -136,89 +165,66 @@ export default function Index() {
         </div>
 
         {/* === COLUMN 2 — MIDDLE === */}
-        <div
-          className="inv-card flex flex-col opacity-0 animate-fade-in-up delay-200"
-          style={{ animationFillMode: "forwards", background: "#f5f0eb" }}
-        >
-          {/* Location */}
+        <div className="inv-card flex flex-col opacity-0 animate-fade-in-up delay-200" style={{ animationFillMode: "forwards", background: "#f5f0eb" }}>
           <div className="px-7 pt-8 pb-4 text-center">
             <Script size="2rem" color="#7B1C2E">Локация</Script>
           </div>
 
-          {/* Venue card */}
           <div className="mx-5 rounded-sm overflow-hidden" style={{ border: "1px solid rgba(123,28,46,0.2)" }}>
             <div style={{ background: "#ede8e0", padding: "12px 14px 6px", textAlign: "center" }}>
               <div style={{ fontSize: "1.2rem" }}>🌸 🌺 🌸</div>
             </div>
             <div className="px-5 py-3 text-center" style={{ background: "#ede8e0" }}>
-              <p className="font-cormorant" style={{ color: "#2a1a1a", fontSize: "1.1rem", lineHeight: 1.5 }}>
-                г/к «Аврора», 1 этаж
-              </p>
-              <p className="font-sans-inv mt-1" style={{ fontSize: "0.68rem", color: "#666", lineHeight: 1.6 }}>
-                ул. Поворотникова, д. 6
-              </p>
+              <p className="font-cormorant" style={{ color: "#2a1a1a", fontSize: "1.1rem", lineHeight: 1.5 }}>г/к «Аврора», 1 этаж</p>
+              <p className="font-sans-inv mt-1" style={{ fontSize: "0.68rem", color: "#666", lineHeight: 1.6 }}>ул. Поворотникова, д. 6</p>
             </div>
-            <div className="overflow-hidden" style={{ height: 140 }}>
-              <img src={IMG_VENUE} alt="Локация" className="w-full h-full object-cover" style={{ filter: "grayscale(40%)" }} />
+            <div className="overflow-hidden" style={{ height: 160 }}>
+              <img
+                src={IMG_VENUE}
+                alt="Аврора Комплекс"
+                className="w-full h-full object-cover"
+                style={{ objectPosition: "center top" }}
+                onError={e => {
+                  const el = e.target as HTMLImageElement;
+                  el.parentElement!.style.background = "#d4c5b5";
+                  el.style.display = "none";
+                }}
+              />
             </div>
             <div style={{ background: "#ede8e0", padding: "6px 14px 12px", textAlign: "center" }}>
               <div style={{ fontSize: "1.2rem" }}>🌺 🌸 🌺</div>
             </div>
           </div>
 
-          {/* Timing */}
           <div className="px-7 pt-8 pb-2 text-center">
             <Script size="2rem" color="#7B1C2E">Тайминг</Script>
           </div>
 
-          {/* Wavy + timing items */}
-          <div className="relative px-4">
+          <div className="relative px-4 pb-6">
             <WavyPath />
             <div className="relative z-10">
               <TimingRow time="11:20" title="Церемония в ЗАГСе" sub="Центральный ЗАГС" />
               <TimingRow time="16:30" title="Сбор гостей" sub="г/к «Аврора»" />
               <TimingRow time="17:00" title="Праздничный банкет" sub="Торжество и угощения" />
-              <div className="text-center py-5">
-                <p className="font-cormorant" style={{ fontSize: "2.4rem", color: "#7B1C2E", fontWeight: 300, lineHeight: 1 }}>
-                  23:00
-                </p>
-                <p className="font-script mt-1" style={{ fontSize: "1.3rem", color: "#2a1a1a" }}>Окончание вечера</p>
-                <p className="font-sans-inv mt-1" style={{ fontSize: "0.65rem", color: "#888", letterSpacing: "0.08em" }}>
-                  Свадебный торт & Прощание
-                </p>
-              </div>
+              <TimingRow time="23:00" title="Окончание вечера" sub="Свадебный торт & Прощание" last />
             </div>
           </div>
         </div>
 
         {/* === COLUMN 3 — RIGHT === */}
-        <div
-          className="inv-card flex flex-col opacity-0 animate-fade-in-up delay-400"
-          style={{ animationFillMode: "forwards", background: "#f5f0eb" }}
-        >
-          {/* Dress code */}
+        <div className="inv-card flex flex-col opacity-0 animate-fade-in-up delay-400" style={{ animationFillMode: "forwards", background: "#f5f0eb" }}>
           <div className="px-7 pt-8 pb-4 text-center">
             <Script size="1.9rem" color="#7B1C2E">Дресс-код</Script>
           </div>
 
-          {/* Color circles */}
           <div className="flex justify-center gap-3 mb-4 px-6">
             {[
-              { bg: "#6B1422", label: "Бордо" },
-              { bg: "#e8ddd0", label: "Крем", border: "#ccc" },
-              { bg: "#c4879a", label: "Пудра" },
-              { bg: "#d4c5b5", label: "Беж", border: "#bbb" },
-            ].map(c => (
-              <div key={c.bg} className="flex flex-col items-center gap-1">
-                <div
-                  style={{
-                    width: 34, height: 34, borderRadius: "50%",
-                    background: c.bg,
-                    border: c.border ? `1px solid ${c.border}` : "none",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
-                  }}
-                />
-              </div>
+              { bg: "#6B1422" },
+              { bg: "#e8ddd0", border: "#ccc" },
+              { bg: "#c4879a" },
+              { bg: "#d4c5b5", border: "#bbb" },
+            ].map((c, i) => (
+              <div key={i} style={{ width: 34, height: 34, borderRadius: "50%", background: c.bg, border: c.border ? `1px solid ${c.border}` : "none", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }} />
             ))}
           </div>
 
@@ -226,17 +232,14 @@ export default function Index() {
             Нам будет приятно видеть вас в тёплых, элегантных нарядах цветовой гаммы нашей свадьбы
           </p>
 
-          {/* Sun decoration */}
           <div className="flex justify-center my-2">
-            <div style={{ fontSize: "3.5rem", filter: "drop-shadow(0 2px 6px rgba(180,130,0,0.3))" }}>☀️</div>
+            <div style={{ fontSize: "3.5rem" }}>☀️</div>
           </div>
 
           {/* Guest form */}
-          <div className="px-7 pt-6 pb-4 text-center">
+          <div className="px-7 pt-4 pb-3 text-center">
             <Script size="1.9rem" color="#7B1C2E">Форма гостя</Script>
-            <p className="font-sans-inv mt-2" style={{ fontSize: "0.68rem", color: "#888", letterSpacing: "0.05em" }}>
-              Сможете ли вы прийти?
-            </p>
+            <p className="font-sans-inv mt-2" style={{ fontSize: "0.68rem", color: "#888", letterSpacing: "0.05em" }}>Сможете ли вы прийти?</p>
           </div>
 
           {!rsvpSent ? (
@@ -257,27 +260,19 @@ export default function Index() {
                 }}
               />
               <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="radio" name="attend" value="yes"
-                  checked={attend === "yes"} onChange={() => setAttend("yes")}
-                  style={{ accentColor: "#7B1C2E" }}
-                />
+                <input type="radio" name="attend" value="yes" checked={attend === "yes"} onChange={() => setAttend("yes")} style={{ accentColor: "#7B1C2E" }} />
                 <span className="font-sans-inv" style={{ fontSize: "0.72rem", color: "#444" }}>Да, с удовольствием буду</span>
               </label>
               <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="radio" name="attend" value="no"
-                  checked={attend === "no"} onChange={() => setAttend("no")}
-                  style={{ accentColor: "#7B1C2E" }}
-                />
+                <input type="radio" name="attend" value="no" checked={attend === "no"} onChange={() => setAttend("no")} style={{ accentColor: "#7B1C2E" }} />
                 <span className="font-sans-inv" style={{ fontSize: "0.72rem", color: "#444" }}>К сожалению, не смогу</span>
               </label>
-              <button
-                className="rsvp-btn w-full mt-1"
-                onClick={() => name.trim() && setRsvpSent(true)}
-              >
-                Подтвердить
+              <button className="rsvp-btn w-full mt-1" onClick={handleRsvp}>
+                Подтвердить во ВКонтакте
               </button>
+              <p className="text-center font-sans-inv" style={{ fontSize: "0.6rem", color: "#aaa", lineHeight: 1.5 }}>
+                Ответ откроется в ВКонтакте
+              </p>
             </div>
           ) : (
             <div className="px-6 pb-8 text-center">
@@ -289,15 +284,13 @@ export default function Index() {
             </div>
           )}
 
-          {/* Bow + See you */}
-          {rsvpSent || (
+          {!rsvpSent && (
             <div className="px-6 pb-8 text-center">
-              <div style={{ fontSize: "2.5rem", margin: "8px 0" }}>🎀</div>
+              <div style={{ fontSize: "2.5rem", margin: "4px 0" }}>🎀</div>
               <Script size="2rem" color="#7B1C2E">Будем вас ждать!</Script>
             </div>
           )}
         </div>
-
       </div>
 
       {/* Footer */}
