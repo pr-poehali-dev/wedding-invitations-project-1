@@ -6,11 +6,14 @@ const IMG_ROSES = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede
 const IMG_VENUE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/bucket/39c18553-489b-4637-b897-85ea05dac879.jpeg";
 const IMG_CUPID = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/81ec72d4-0bf2-4eba-a753-437f8967f78a.jpg";
 
-// Романтическая музыка — рабочий CDN
-const MUSIC_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+// Golden Brown (Slowed) — GhalyProd
+const MUSIC_URL = "https://cdn.pixabay.com/audio/2022/10/12/audio_a6d3f5b0f9.mp3";
 
-// ВКонтакте: отправка сообщения по номеру телефона
-const VK_URL = "https://vk.com/write?phone=79028222722";
+// ВКонтакте — прямая ссылка на профиль
+const VK_URL = "https://vk.ru/sonechka_nss";
+
+// Конверт с рукой и сургучной печатью
+const IMG_ENVELOPE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/bucket/eebf0159-d4e3-4855-b1db-00e8f587acfb.jpeg";
 
 const WavyPath = () => (
   <svg viewBox="0 0 120 300" className="absolute left-1/2 -translate-x-1/2" style={{ height: "100%", width: 80, top: 0, opacity: 0.35 }} fill="none">
@@ -57,7 +60,7 @@ export default function Index() {
     const msg = encodeURIComponent(
       `Ответ на приглашение Евгения и Софии (22.07.2026)\nИмя: ${name}\nПриду: ${attend === "yes" ? "Да ✓" : "Нет ✗"}`
     );
-    window.open(`${VK_URL}&message=${msg}`, "_blank");
+    window.open(`https://vk.me/sonechka_nss?msg=${msg}`, "_blank");
     setRsvpSent(true);
   };
 
@@ -94,7 +97,7 @@ export default function Index() {
           {playing ? "⏸ Остановить музыку" : "♫ Включить музыку"}
         </button>
         <p className="font-cormorant" style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", fontStyle: "italic" }}>
-          {playing ? "♫ Enya — Only Time (Sweet November)" : "Нажмите, чтобы включить музыку"}
+          {playing ? "♫ Golden Brown (Slowed) — GhalyProd" : "Нажмите, чтобы включить музыку"}
         </p>
       </div>
 
@@ -116,30 +119,56 @@ export default function Index() {
             <p className="font-script mt-1" style={{ fontSize: "1.15rem", color: "#a0333f" }}>и счастливы пригласить вас</p>
           </div>
 
-          {/* Бордовый конвертик */}
-          <div className="flex justify-center px-6 mb-4">
-            <div style={{ position: "relative", width: "100%", maxWidth: 220 }}>
-              <svg viewBox="0 0 220 155" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", filter: "drop-shadow(0 8px 24px rgba(107,20,34,0.35))" }}>
-                {/* Конверт — тело */}
-                <rect x="2" y="2" width="216" height="151" rx="6" ry="6" fill="#7B1C2E" />
-                {/* Нижние треугольники */}
-                <polygon points="2,153 110,85 218,153" fill="#5a1220" />
-                {/* Левый треугольник */}
-                <polygon points="2,2 2,153 90,77" fill="#6B1422" />
-                {/* Правый треугольник */}
-                <polygon points="218,2 218,153 130,77" fill="#6B1422" />
-                {/* Верхний клапан (открыт) */}
-                <polygon points="2,2 218,2 110,78" fill="#9B2235" />
-                {/* Полоска-печать */}
-                <ellipse cx="110" cy="78" rx="22" ry="15" fill="#C4879A" opacity="0.5" />
-                <text x="110" y="83" textAnchor="middle" fontSize="14" fill="#fff" fontFamily="serif" opacity="0.9">♡</text>
-                {/* Розы декор */}
-                <text x="30" y="130" fontSize="18" fontFamily="serif" opacity="0.6">🌹</text>
-                <text x="170" y="130" fontSize="18" fontFamily="serif" opacity="0.6">🌹</text>
-              </svg>
-              {/* Подпись */}
-              <p className="font-script text-center mt-2" style={{ color: "#7B1C2E", fontSize: "1rem" }}>
-                Для вас особое приглашение
+          {/* Конверт с рукой */}
+          <div className="px-4 mb-2" style={{ position: "relative" }}>
+            <img
+              src={IMG_ENVELOPE}
+              alt="Приглашение"
+              className="w-full rounded-sm"
+              style={{ objectFit: "cover", maxHeight: 280, boxShadow: "0 8px 32px rgba(107,20,34,0.3)" }}
+            />
+            {/* Имена поверх конверта */}
+            <div
+              style={{
+                position: "absolute",
+                top: "28%",
+                left: 0, right: 0,
+                textAlign: "center",
+                pointerEvents: "none",
+              }}
+            >
+              <p
+                className="font-script"
+                style={{
+                  color: "#7B1C2E",
+                  fontSize: "clamp(1.6rem, 6vw, 2.2rem)",
+                  lineHeight: 1.2,
+                  textShadow: "0 1px 8px rgba(255,255,255,0.8)",
+                }}
+              >
+                Евгений
+              </p>
+              <p
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  color: "#9B2235",
+                  fontSize: "1.1rem",
+                  letterSpacing: "0.3em",
+                  textShadow: "0 1px 6px rgba(255,255,255,0.8)",
+                }}
+              >
+                &amp;
+              </p>
+              <p
+                className="font-script"
+                style={{
+                  color: "#7B1C2E",
+                  fontSize: "clamp(1.6rem, 6vw, 2.2rem)",
+                  lineHeight: 1.2,
+                  textShadow: "0 1px 8px rgba(255,255,255,0.8)",
+                }}
+              >
+                София
               </p>
             </div>
           </div>
