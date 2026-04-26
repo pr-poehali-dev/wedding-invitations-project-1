@@ -6,8 +6,8 @@ const IMG_ROSES = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede
 const IMG_VENUE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/bucket/39c18553-489b-4637-b897-85ea05dac879.jpeg";
 const IMG_CUPID = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/81ec72d4-0bf2-4eba-a753-437f8967f78a.jpg";
 
-// Golden Brown (Slowed) — GhalyProd
-const MUSIC_URL = "https://cdn.pixabay.com/audio/2022/10/12/audio_a6d3f5b0f9.mp3";
+// Музыка загружена на наш CDN — гарантированно работает
+const MUSIC_URL = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/music/wedding-music.mp3";
 
 // ВКонтакте — прямая ссылка на профиль
 const VK_URL = "https://vk.ru/sonechka_nss";
@@ -131,7 +131,7 @@ export default function Index() {
             <div
               style={{
                 position: "absolute",
-                top: "28%",
+                top: "22%",
                 left: 0, right: 0,
                 textAlign: "center",
                 pointerEvents: "none",
@@ -140,10 +140,11 @@ export default function Index() {
               <p
                 className="font-script"
                 style={{
-                  color: "#7B1C2E",
-                  fontSize: "clamp(1.6rem, 6vw, 2.2rem)",
-                  lineHeight: 1.2,
-                  textShadow: "0 1px 8px rgba(255,255,255,0.8)",
+                  color: "#5a1220",
+                  fontSize: "clamp(2.4rem, 9vw, 3.4rem)",
+                  lineHeight: 1.1,
+                  textShadow: "0 2px 12px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.6)",
+                  fontWeight: 400,
                 }}
               >
                 Евгений
@@ -151,10 +152,11 @@ export default function Index() {
               <p
                 style={{
                   fontFamily: "'Cormorant Garamond', serif",
-                  color: "#9B2235",
-                  fontSize: "1.1rem",
-                  letterSpacing: "0.3em",
-                  textShadow: "0 1px 6px rgba(255,255,255,0.8)",
+                  color: "#7B1C2E",
+                  fontSize: "clamp(1.2rem, 4vw, 1.8rem)",
+                  letterSpacing: "0.4em",
+                  textShadow: "0 1px 8px rgba(255,255,255,0.9)",
+                  margin: "2px 0",
                 }}
               >
                 &amp;
@@ -162,10 +164,11 @@ export default function Index() {
               <p
                 className="font-script"
                 style={{
-                  color: "#7B1C2E",
-                  fontSize: "clamp(1.6rem, 6vw, 2.2rem)",
-                  lineHeight: 1.2,
-                  textShadow: "0 1px 8px rgba(255,255,255,0.8)",
+                  color: "#5a1220",
+                  fontSize: "clamp(2.4rem, 9vw, 3.4rem)",
+                  lineHeight: 1.1,
+                  textShadow: "0 2px 12px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.6)",
+                  fontWeight: 400,
                 }}
               >
                 София
