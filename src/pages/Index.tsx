@@ -43,15 +43,19 @@ export default function Index() {
   const [attend, setAttend] = useState("yes");
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
+  const [error, setError] = useState(false);
 
   const toggleMusic = () => {
-    if (!audioRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
     if (playing) {
-      audioRef.current.pause();
+      audio.pause();
       setPlaying(false);
     } else {
-      audioRef.current.play().catch(() => {});
-      setPlaying(true);
+      audio.volume = 0.5;
+      audio.play()
+        .then(() => { setPlaying(true); setError(false); })
+        .catch(() => { setError(true); });
     }
   };
 
@@ -70,35 +74,68 @@ export default function Index() {
       style={{ background: "linear-gradient(160deg, #6B1422 0%, #8B1A2A 40%, #6B1422 100%)" }}
     >
       {/* Audio */}
-      <audio ref={audioRef} loop>
+      <audio
+        ref={audioRef}
+        loop
+        onError={() => setError(true)}
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+        preload="auto"
+      >
         <source src={MUSIC_URL} type="audio/mpeg" />
       </audio>
 
       {/* ===== TOP MUSIC BAR ===== */}
       <div
-        className="w-full flex flex-col items-center justify-center py-4 px-6 mb-6 gap-2"
-        style={{ background: "rgba(0,0,0,0.3)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+        className="w-full flex flex-col items-center justify-center py-5 px-6 mb-6 gap-3"
+        style={{ background: "rgba(0,0,0,0.35)", borderBottom: "1px solid rgba(255,255,255,0.12)" }}
       >
         <button
           onClick={toggleMusic}
-          className="flex items-center gap-3 px-7 py-3 rounded-full transition-all"
+          className="flex items-center gap-3 px-8 py-3 rounded-full transition-all"
           style={{
-            background: playing ? "#7B1C2E" : "#fff",
+            background: playing ? "#5a1220" : "#fff",
             color: playing ? "#fff" : "#7B1C2E",
-            border: "2px solid rgba(255,255,255,0.4)",
+            border: playing ? "2px solid rgba(255,255,255,0.25)" : "2px solid #7B1C2E",
             fontFamily: "'Montserrat', sans-serif",
-            fontSize: "0.72rem",
-            letterSpacing: "0.15em",
+            fontSize: "0.75rem",
+            letterSpacing: "0.12em",
             textTransform: "uppercase",
-            boxShadow: playing ? "0 0 20px rgba(255,255,255,0.15)" : "0 4px 20px rgba(0,0,0,0.3)",
+            boxShadow: playing ? "0 0 24px rgba(255,255,255,0.1)" : "0 6px 24px rgba(0,0,0,0.35)",
+            cursor: "pointer",
+            minWidth: 200,
+            justifyContent: "center",
           }}
         >
-          <Icon name={playing ? "Pause" : "Music"} size={16} />
-          {playing ? "⏸ Остановить музыку" : "♫ Включить музыку"}
+          <Icon name={playing ? "Pause" : "Play"} size={18} />
+          {playing ? "Остановить" : "♫ Включить музыку"}
         </button>
-        <p className="font-cormorant" style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", fontStyle: "italic" }}>
-          {playing ? "♫ Golden Brown (Slowed) — GhalyProd" : "Нажмите, чтобы включить музыку"}
+
+        <p className="font-cormorant text-center" style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.88rem", fontStyle: "italic" }}>
+          {error
+            ? "⚠️ Не удалось загрузить файл"
+            : playing
+            ? "♫ Романтическая музыка играет..."
+            : "Нажмите кнопку, чтобы включить музыку"}
         </p>
+
+        {/* Анимация нот когда играет */}
+        {playing && (
+          <div className="flex gap-1 items-end" style={{ height: 16 }}>
+            {[0.4, 0.8, 0.5, 1, 0.6].map((h, i) => (
+              <div
+                key={i}
+                style={{
+                  width: 3,
+                  height: `${h * 16}px`,
+                  background: "rgba(255,255,255,0.5)",
+                  borderRadius: 2,
+                  animation: `bounce ${0.6 + i * 0.1}s ease-in-out infinite alternate`,
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Header */}

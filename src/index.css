@@ -55,6 +55,17 @@
   }
 }
 
+@keyframes bounce {
+  from {
+    transform: scaleY(0.4);
+    opacity: 0.5;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
