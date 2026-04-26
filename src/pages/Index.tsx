@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
-const IMG_COUPLE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/acbfa22e-c746-498b-8764-8d798860dda7.jpg";
-const IMG_VENUE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/62b79098-0fb0-4ff8-a309-921b487a41bb.jpg";
+const IMG_ROSES = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/b9b189a7-2a9d-4224-84f0-cb3a6d7ee8.jpg";
+const IMG_VENUE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/bucket/39c18553-489b-4637-b897-85ea05dac879.jpeg";
 const IMG_CUPID = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/81ec72d4-0bf2-4eba-a753-437f8967f78a.jpg";
 
 const WavyPath = () => (
@@ -44,7 +44,14 @@ export default function Index() {
   const toggleMusic = () => {
     if (!audioRef.current) return;
     if (playing) { audioRef.current.pause(); setPlaying(false); }
-    else { audioRef.current.play(); setPlaying(true); }
+    else { audioRef.current.play().catch(() => {}); setPlaying(true); }
+  };
+
+  const handleAudioReady = () => {
+    if (audioRef.current) {
+      audioRef.current.volume = 0.4;
+      audioRef.current.play().then(() => setPlaying(true)).catch(() => {});
+    }
   };
 
   return (
@@ -52,8 +59,8 @@ export default function Index() {
       className="min-h-screen flex flex-col items-center justify-start py-10 px-4"
       style={{ background: "linear-gradient(160deg, #6B1422 0%, #8B1A2A 40%, #6B1422 100%)" }}
     >
-      {/* Background music */}
-      <audio ref={audioRef} loop>
+      {/* Background music — autoplay on load */}
+      <audio ref={audioRef} loop onCanPlayThrough={handleAudioReady}>
         <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg" />
       </audio>
 
@@ -97,17 +104,12 @@ export default function Index() {
             <p className="font-script mt-1" style={{ fontSize: "1.15rem", color: "#a0333f" }}>и счастливы пригласить вас</p>
           </div>
 
-          {/* Couple photo */}
-          <div className="px-6">
+          {/* Roses photo instead of couple */}
+          <div className="px-6 mb-2">
             <div className="relative rounded-sm overflow-hidden" style={{ border: "3px solid #fff", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
-              <img src={IMG_COUPLE} alt="Пара" className="w-full object-cover" style={{ height: 200 }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 60%, rgba(245,240,235,0.3))" }} />
+              <img src={IMG_ROSES} alt="Букет" className="w-full object-cover" style={{ height: 200 }} />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 60%, rgba(245,240,235,0.25))" }} />
             </div>
-          </div>
-
-          {/* Rose decorative */}
-          <div className="flex justify-end px-5 -mt-3 mb-2">
-            <div style={{ fontSize: "2.5rem", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))" }}>🌹</div>
           </div>
 
           {/* Save the date */}
@@ -176,7 +178,6 @@ export default function Index() {
               <TimingRow time="11:20" title="Церемония в ЗАГСе" sub="Центральный ЗАГС" />
               <TimingRow time="16:30" title="Сбор гостей" sub="г/к «Аврора»" />
               <TimingRow time="17:00" title="Праздничный банкет" sub="Торжество и угощения" />
-              <TimingRow time="19:00" title="Живая музыка" sub="Квартет & Первый танец" />
               <div className="text-center py-5">
                 <p className="font-cormorant" style={{ fontSize: "2.4rem", color: "#7B1C2E", fontWeight: 300, lineHeight: 1 }}>
                   23:00
@@ -228,18 +229,6 @@ export default function Index() {
           {/* Sun decoration */}
           <div className="flex justify-center my-2">
             <div style={{ fontSize: "3.5rem", filter: "drop-shadow(0 2px 6px rgba(180,130,0,0.3))" }}>☀️</div>
-          </div>
-
-          {/* Music note */}
-          <div
-            className="mx-5 my-3 px-5 py-4 rounded-sm text-center"
-            style={{ background: "rgba(123,28,46,0.06)", border: "1px solid rgba(123,28,46,0.15)" }}
-          >
-            <div style={{ fontSize: "1.5rem", marginBottom: 6 }}>🎵</div>
-            <p className="font-script" style={{ color: "#7B1C2E", fontSize: "1.3rem" }}>Живая музыка</p>
-            <p className="font-cormorant mt-1" style={{ color: "#666", fontSize: "0.88rem", fontStyle: "italic" }}>
-              Квартет сопроводит вечер нежными мелодиями — от вальса до джаза
-            </p>
           </div>
 
           {/* Guest form */}
