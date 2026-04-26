@@ -33,12 +33,13 @@ export default function Index() {
   const [rsvpSent, setRsvpSent] = useState(false);
   const [name, setName] = useState("");
 
+  // Июль 2026: 1 июля — среда (смещение 2)
   const calDays = [
     null, null, 1, 2, 3, 4, 5,
     6, 7, 8, 9, 10, 11, 12,
     13, 14, 15, 16, 17, 18, 19,
     20, 21, 22, 23, 24, 25, 26,
-    27, 28, 29, 30,
+    27, 28, 29, 30, 31,
   ];
 
   return (
@@ -58,7 +59,7 @@ export default function Index() {
             className="font-script text-center mb-6"
             style={{ color: "var(--bordeaux)", fontSize: "1.9rem" }}
           >
-            Анна & Михаил
+            Евгений & София
           </p>
 
           {/* LOVE typography */}
@@ -80,7 +81,7 @@ export default function Index() {
             className="text-center mb-8 tracking-[0.25em] font-sans-inv"
             style={{ fontSize: "0.78rem", color: "var(--text-dark)", fontWeight: 500 }}
           >
-            14 ИЮНЯ 2025
+            22 ИЮЛЯ 2026
           </p>
 
           <WavyLine />
@@ -115,7 +116,7 @@ export default function Index() {
               className="text-center mb-4 tracking-[0.2em] font-sans-inv"
               style={{ fontSize: "0.7rem", color: "var(--text-dark)", fontWeight: 500 }}
             >
-              ИЮНЬ 2025
+              ИЮЛЬ 2026
             </p>
             <div className="cal-grid mb-1 px-2">
               {["Пн","Вт","Ср","Чт","Пт","Сб","Вс"].map(d => (
@@ -128,7 +129,7 @@ export default function Index() {
               {calDays.map((day, i) => (
                 <div
                   key={i}
-                  className={`cal-day font-sans-inv ${day === 14 ? "highlight" : ""}`}
+                  className={`cal-day font-sans-inv ${day === 22 ? "highlight" : ""}`}
                   style={{ color: day ? "var(--text-dark)" : "transparent" }}
                 >
                   {day || "·"}
@@ -159,10 +160,10 @@ export default function Index() {
                   className="font-cormorant font-light"
                   style={{ color: "var(--text-dark)", fontSize: "1rem", lineHeight: 1.5 }}
                 >
-                  Ресторан «Дворянское гнездо»
+                  г/к «Аврора», 1 этаж
                 </p>
                 <p className="font-sans-inv mt-1" style={{ color: "var(--text-light)", fontSize: "0.72rem", lineHeight: 1.6 }}>
-                  ул. Некрасовская, 53
+                  ул. Поворотникова, д. 6
                 </p>
                 <div className="flex items-center gap-1 mt-2">
                   <Icon name="Phone" size={11} style={{ color: "var(--bordeaux)" }} />
@@ -188,9 +189,9 @@ export default function Index() {
 
           <div className="mt-4 space-y-0">
             {[
-              { time: "14:00", title: "Сбор гостей", desc: "Просим взять с собой ваше хорошее настроение" },
-              { time: "15:00", title: "Церемония", desc: "Приготовьте ваши платочки для слёз счастья" },
-              { time: "16:30", title: "Банкет", desc: "Время для вкусной еды и зажигательных танцев" },
+              { time: "11:20", title: "Церемония", desc: "Центральный ЗАГС — приготовьте платочки для слёз счастья" },
+              { time: "16:30", title: "Сбор гостей", desc: "Просим взять с собой ваше хорошее настроение" },
+              { time: "17:00", title: "Праздничный банкет", desc: "Время для вкусной еды и зажигательных танцев" },
             ].map((item, idx) => (
               <div key={idx} className="flex items-start gap-5 py-4" style={{ borderBottom: idx < 2 ? "1px solid rgba(0,0,0,0.06)" : "none" }}>
                 <div className="flex-shrink-0 pt-1">
@@ -272,7 +273,7 @@ export default function Index() {
               className="font-cormorant text-center"
               style={{ color: "var(--text-mid)", fontSize: "0.95rem", fontStyle: "italic", lineHeight: 1.6 }}
             >
-              Просим подтвердить ваше присутствие до 1 июня 2025 года любым удобным для вас способом.
+              Просим подтвердить ваше присутствие до 1 июля 2026 года любым удобным для вас способом.
             </p>
           </div>
 
