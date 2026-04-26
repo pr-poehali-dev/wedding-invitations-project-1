@@ -6,8 +6,8 @@ const IMG_ROSES = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede
 const IMG_VENUE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/bucket/39c18553-489b-4637-b897-85ea05dac879.jpeg";
 const IMG_CUPID = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/81ec72d4-0bf2-4eba-a753-437f8967f78a.jpg";
 
-// Only Time — Enya (публичный CDN)
-const MUSIC_URL = "https://archive.org/download/EnyaOnlyTime/Enya%20-%20Only%20Time.mp3";
+// Романтическая музыка — рабочий CDN
+const MUSIC_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
 
 // ВКонтакте: отправка сообщения по номеру телефона
 const VK_URL = "https://vk.com/write?phone=79028222722";
@@ -73,30 +73,29 @@ export default function Index() {
 
       {/* ===== TOP MUSIC BAR ===== */}
       <div
-        className="w-full flex items-center justify-center py-3 px-6 mb-6 gap-4"
-        style={{ background: "rgba(0,0,0,0.25)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}
+        className="w-full flex flex-col items-center justify-center py-4 px-6 mb-6 gap-2"
+        style={{ background: "rgba(0,0,0,0.3)", borderBottom: "1px solid rgba(255,255,255,0.1)" }}
       >
         <button
           onClick={toggleMusic}
-          className="flex items-center gap-2 px-5 py-2 rounded-full transition-all"
+          className="flex items-center gap-3 px-7 py-3 rounded-full transition-all"
           style={{
-            background: playing ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.9)",
+            background: playing ? "#7B1C2E" : "#fff",
             color: playing ? "#fff" : "#7B1C2E",
-            border: "1px solid rgba(255,255,255,0.3)",
+            border: "2px solid rgba(255,255,255,0.4)",
             fontFamily: "'Montserrat', sans-serif",
-            fontSize: "0.68rem",
-            letterSpacing: "0.12em",
+            fontSize: "0.72rem",
+            letterSpacing: "0.15em",
             textTransform: "uppercase",
+            boxShadow: playing ? "0 0 20px rgba(255,255,255,0.15)" : "0 4px 20px rgba(0,0,0,0.3)",
           }}
         >
-          <Icon name={playing ? "Pause" : "Play"} size={14} />
-          {playing ? "Пауза" : "Включить музыку"}
+          <Icon name={playing ? "Pause" : "Music"} size={16} />
+          {playing ? "⏸ Остановить музыку" : "♫ Включить музыку"}
         </button>
-        {playing && (
-          <p className="font-cormorant" style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", fontStyle: "italic" }}>
-            ♫ Enya — Only Time
-          </p>
-        )}
+        <p className="font-cormorant" style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", fontStyle: "italic" }}>
+          {playing ? "♫ Enya — Only Time (Sweet November)" : "Нажмите, чтобы включить музыку"}
+        </p>
       </div>
 
       {/* Header */}
@@ -117,23 +116,32 @@ export default function Index() {
             <p className="font-script mt-1" style={{ fontSize: "1.15rem", color: "#a0333f" }}>и счастливы пригласить вас</p>
           </div>
 
-          {/* Roses */}
-          <div className="px-6 mb-2">
-            <div className="relative rounded-sm overflow-hidden" style={{ border: "3px solid #fff", boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
-              <img
-                src={IMG_ROSES}
-                alt="Букет роз"
-                className="w-full object-cover"
-                style={{ height: 200 }}
-                onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
-              />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, transparent 60%, rgba(245,240,235,0.25))" }} />
+          {/* Бордовый конвертик */}
+          <div className="flex justify-center px-6 mb-4">
+            <div style={{ position: "relative", width: "100%", maxWidth: 220 }}>
+              <svg viewBox="0 0 220 155" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", filter: "drop-shadow(0 8px 24px rgba(107,20,34,0.35))" }}>
+                {/* Конверт — тело */}
+                <rect x="2" y="2" width="216" height="151" rx="6" ry="6" fill="#7B1C2E" />
+                {/* Нижние треугольники */}
+                <polygon points="2,153 110,85 218,153" fill="#5a1220" />
+                {/* Левый треугольник */}
+                <polygon points="2,2 2,153 90,77" fill="#6B1422" />
+                {/* Правый треугольник */}
+                <polygon points="218,2 218,153 130,77" fill="#6B1422" />
+                {/* Верхний клапан (открыт) */}
+                <polygon points="2,2 218,2 110,78" fill="#9B2235" />
+                {/* Полоска-печать */}
+                <ellipse cx="110" cy="78" rx="22" ry="15" fill="#C4879A" opacity="0.5" />
+                <text x="110" y="83" textAnchor="middle" fontSize="14" fill="#fff" fontFamily="serif" opacity="0.9">♡</text>
+                {/* Розы декор */}
+                <text x="30" y="130" fontSize="18" fontFamily="serif" opacity="0.6">🌹</text>
+                <text x="170" y="130" fontSize="18" fontFamily="serif" opacity="0.6">🌹</text>
+              </svg>
+              {/* Подпись */}
+              <p className="font-script text-center mt-2" style={{ color: "#7B1C2E", fontSize: "1rem" }}>
+                Для вас особое приглашение
+              </p>
             </div>
-          </div>
-
-          {/* Розы-декор если фото не грузится */}
-          <div className="flex justify-center gap-2 my-1" style={{ fontSize: "1.8rem" }}>
-            🌹🌹🌹
           </div>
 
           {/* Save the date */}
