@@ -1,313 +1,335 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 
-const BG_IMAGE = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/0ef8792d-3b32-4f71-9cae-ecf051a403e0.jpg";
+const RESTAURANT_IMG = "https://cdn.poehali.dev/projects/29aa877d-7366-4c0c-80d6-0ede894798d4/files/7af58d6e-786f-4039-80a2-00f824e43ade.jpg";
 
-const CornerOrnament = ({ position }: { position: string }) => {
-  const classes: Record<string, string> = {
-    "tl": "top-4 left-4 border-t-2 border-l-2",
-    "tr": "top-4 right-4 border-t-2 border-r-2",
-    "bl": "bottom-4 left-4 border-b-2 border-l-2",
-    "br": "bottom-4 right-4 border-b-2 border-r-2",
-  };
-  return <div className={`corner-ornament ${classes[position]}`} />;
-};
+const WavyLine = ({ color = "#7B1C2E", opacity = 0.35 }: { color?: string; opacity?: number }) => (
+  <svg viewBox="0 0 280 60" className="w-full" style={{ height: 50, opacity }} fill="none">
+    <path
+      d="M0,30 C40,10 60,50 100,30 C140,10 160,50 200,30 C240,10 260,50 280,30"
+      stroke={color}
+      strokeWidth="1.5"
+      fill="none"
+    />
+  </svg>
+);
 
-const DetailCard = ({
-  icon,
-  label,
-  value,
-  sub,
-  delay,
-}: {
-  icon: string;
-  label: string;
-  value: string;
-  sub?: string;
-  delay: string;
-}) => (
-  <div
-    className={`details-card rounded-2xl p-6 text-center opacity-0 animate-fade-in-up ${delay}`}
-    style={{ animationFillMode: "forwards" }}
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <h3
+    className="font-script text-center mb-4"
+    style={{ color: "var(--bordeaux)", fontSize: "2rem", lineHeight: 1.2 }}
   >
-    <div className="flex justify-center mb-3">
-      <div
-        className="w-12 h-12 rounded-full flex items-center justify-center"
-        style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.3)" }}
-      >
-        <Icon name={icon} fallback="Star" size={22} className="text-yellow-400" />
-      </div>
-    </div>
-    <p className="text-xs uppercase tracking-[0.2em] mb-1" style={{ color: "var(--gold)", fontFamily: "'Montserrat', sans-serif" }}>
-      {label}
-    </p>
-    <p
-      className="text-xl font-light leading-tight"
-      style={{ fontFamily: "'Cormorant Garamond', serif", color: "#F5E6C0", fontSize: "1.2rem" }}
-    >
-      {value}
-    </p>
-    {sub && (
-      <p className="text-xs mt-1" style={{ color: "rgba(245,230,192,0.5)", fontFamily: "'Montserrat', sans-serif" }}>
-        {sub}
-      </p>
-    )}
+    {children}
+  </h3>
+);
+
+const HeartDivider = () => (
+  <div className="flex justify-center my-4" style={{ color: "var(--bordeaux)", fontSize: "1.1rem", opacity: 0.7 }}>
+    ♡
   </div>
 );
 
 export default function Index() {
   const [rsvpSent, setRsvpSent] = useState(false);
-  const [form, setForm] = useState({ name: "", guests: "1", attend: "yes" });
+  const [name, setName] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setRsvpSent(true);
-  };
+  const calDays = [
+    null, null, 1, 2, 3, 4, 5,
+    6, 7, 8, 9, 10, 11, 12,
+    13, 14, 15, 16, 17, 18, 19,
+    20, 21, 22, 23, 24, 25, 26,
+    27, 28, 29, 30,
+  ];
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-start py-10 px-4 bg-pattern"
-      style={{ backgroundColor: "var(--navy)", position: "relative", overflow: "hidden" }}
+      className="min-h-screen flex items-start justify-center py-10 px-4"
+      style={{ background: "linear-gradient(135deg, #7B1C2E 0%, #5a1220 50%, #7B1C2E 100%)" }}
     >
-      <div
-        style={{
-          position: "fixed",
-          top: "30%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "800px",
-          height: "800px",
-          background: "radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%)",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
+      <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-4 items-start">
 
-      <div
-        className="invitation-card relative w-full max-w-2xl rounded-3xl px-8 py-12 md:px-14 md:py-16 opacity-0 animate-fade-in"
-        style={{ animationFillMode: "forwards", zIndex: 1 }}
-      >
-        <CornerOrnament position="tl" />
-        <CornerOrnament position="tr" />
-        <CornerOrnament position="bl" />
-        <CornerOrnament position="br" />
-
+        {/* === LEFT CARD === */}
         <div
-          className="w-full h-40 rounded-2xl mb-10 overflow-hidden opacity-0 animate-fade-in delay-100"
-          style={{ animationFillMode: "forwards", position: "relative" }}
-        >
-          <img
-            src={BG_IMAGE}
-            alt="Свадебный декор"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: "center 30%" }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "80px",
-              background: "linear-gradient(to bottom, transparent, #141628)",
-            }}
-          />
-        </div>
-
-        <p
-          className="text-center uppercase tracking-[0.35em] text-xs mb-5 opacity-0 animate-fade-in-up delay-200"
-          style={{
-            color: "var(--gold)",
-            fontFamily: "'Montserrat', sans-serif",
-            animationFillMode: "forwards",
-          }}
-        >
-          Вы приглашены
-        </p>
-
-        <h1
-          className="gold-text text-center mb-3 leading-none opacity-0 animate-fade-in-up delay-300"
-          style={{
-            fontFamily: "'Cormorant SC', serif",
-            fontSize: "clamp(2.8rem, 10vw, 5rem)",
-            fontWeight: 300,
-            letterSpacing: "0.04em",
-            animationFillMode: "forwards",
-          }}
-        >
-          Анна & Михаил
-        </h1>
-
-        <div
-          className="flex items-center justify-center gap-4 my-6 opacity-0 animate-fade-in-up delay-400"
+          className="inv-card w-full lg:w-5/12 px-8 py-10 opacity-0 animate-fade-in-up flex flex-col"
           style={{ animationFillMode: "forwards" }}
         >
-          <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, rgba(201,168,76,0.5))" }} />
-          <span style={{ color: "var(--gold)", fontSize: "1.1rem" }}>✦</span>
+          {/* Names */}
           <p
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: "italic",
-              color: "rgba(245,230,192,0.55)",
-              fontSize: "1rem",
-              fontWeight: 300,
-            }}
+            className="font-script text-center mb-6"
+            style={{ color: "var(--bordeaux)", fontSize: "1.9rem" }}
           >
-            приглашают разделить радость этого дня
+            Анна & Михаил
           </p>
-          <span style={{ color: "var(--gold)", fontSize: "1.1rem" }}>✦</span>
-          <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, rgba(201,168,76,0.5), transparent)" }} />
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-          <DetailCard icon="Calendar" label="Дата" value="14 июня 2025" sub="Суббота" delay="delay-400" />
-          <DetailCard icon="Clock" label="Время" value="17:00" sub="Начало церемонии" delay="delay-500" />
-          <DetailCard icon="MapPin" label="Место" value='Усадьба "Дворянское гнездо"' sub="Москва, Рублёвское шоссе, 42" delay="delay-600" />
-        </div>
-
-        <div
-          className="flex items-center justify-center gap-3 mt-8 mb-6 opacity-0 animate-fade-in-up delay-800"
-          style={{ animationFillMode: "forwards" }}
-        >
-          <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, transparent, rgba(201,168,76,0.25))" }} />
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ border: "1px solid rgba(201,168,76,0.25)", background: "rgba(201,168,76,0.06)" }}>
-            <Icon name="Sparkles" size={14} style={{ color: "var(--gold)" }} />
-            <span className="text-xs uppercase tracking-[0.2em]" style={{ color: "var(--gold-light)", fontFamily: "'Montserrat', sans-serif" }}>
-              Дресс-код: Black Tie
-            </span>
+          {/* LOVE typography */}
+          <div className="flex justify-center mb-6">
+            <div style={{ lineHeight: 0.9, fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>
+              <div style={{ fontSize: "4.8rem", letterSpacing: "-0.02em", color: "#1a1a1a" }}>
+                <span>L</span>
+                <span style={{ color: "var(--bordeaux)", marginLeft: "0.5rem" }}>O</span>
+              </div>
+              <div style={{ fontSize: "4.8rem", letterSpacing: "-0.02em", color: "var(--bordeaux)" }}>
+                <span style={{ color: "#1a1a1a" }}>V</span>
+                <span>E</span>
+              </div>
+            </div>
           </div>
-          <div style={{ flex: 1, height: "1px", background: "linear-gradient(90deg, rgba(201,168,76,0.25), transparent)" }} />
-        </div>
 
-        <div
-          className="mt-8 opacity-0 animate-fade-in-up delay-1000"
-          style={{ animationFillMode: "forwards" }}
-        >
+          {/* Date */}
           <p
-            className="text-center mb-6"
-            style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontStyle: "italic",
-              color: "rgba(245,230,192,0.45)",
-              fontSize: "0.95rem",
-              letterSpacing: "0.03em",
-            }}
+            className="text-center mb-8 tracking-[0.25em] font-sans-inv"
+            style={{ fontSize: "0.78rem", color: "var(--text-dark)", fontWeight: 500 }}
           >
-            Пожалуйста, подтвердите своё присутствие до 1 июня 2025
+            14 ИЮНЯ 2025
           </p>
 
-          {!rsvpSent ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <WavyLine />
+
+          {/* Greeting */}
+          <div className="mt-4 mb-6 text-center">
+            <p
+              className="font-script mb-3"
+              style={{ color: "var(--bordeaux)", fontSize: "1.6rem" }}
+            >
+              Дорогие друзья и близкие!
+            </p>
+            <p
+              className="font-cormorant leading-relaxed"
+              style={{ color: "var(--text-mid)", fontSize: "1.05rem", fontStyle: "italic" }}
+            >
+              В нашей жизни скоро состоится важное событие — наша свадьба!
+            </p>
+            <p
+              className="font-cormorant leading-relaxed mt-2"
+              style={{ color: "var(--text-mid)", fontSize: "1.05rem", fontStyle: "italic" }}
+            >
+              Приглашаем Вас разделить с нами радость этого неповторимого события!
+            </p>
+          </div>
+
+          <WavyLine />
+
+          {/* Calendar */}
+          <div className="mt-6 mb-6">
+            <p
+              className="text-center mb-4 tracking-[0.2em] font-sans-inv"
+              style={{ fontSize: "0.7rem", color: "var(--text-dark)", fontWeight: 500 }}
+            >
+              ИЮНЬ 2025
+            </p>
+            <div className="cal-grid mb-1 px-2">
+              {["Пн","Вт","Ср","Чт","Пт","Сб","Вс"].map(d => (
+                <div key={d} className="cal-day font-sans-inv" style={{ color: "var(--text-light)", fontSize: "0.62rem", fontWeight: 500, letterSpacing: "0.05em" }}>
+                  {d}
+                </div>
+              ))}
+            </div>
+            <div className="cal-grid px-2">
+              {calDays.map((day, i) => (
+                <div
+                  key={i}
+                  className={`cal-day font-sans-inv ${day === 14 ? "highlight" : ""}`}
+                  style={{ color: day ? "var(--text-dark)" : "transparent" }}
+                >
+                  {day || "·"}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <WavyLine />
+
+          {/* Location */}
+          <div className="mt-6">
+            <p
+              className="font-script text-center mb-4"
+              style={{ color: "var(--bordeaux)", fontSize: "1.7rem" }}
+            >
+              Локация
+            </p>
+            <div className="flex gap-4 items-start">
+              <img
+                src={RESTAURANT_IMG}
+                alt="Ресторан"
+                className="rounded-sm object-cover flex-shrink-0"
+                style={{ width: 110, height: 110, filter: "grayscale(100%)" }}
+              />
+              <div className="pt-1">
+                <p
+                  className="font-cormorant font-light"
+                  style={{ color: "var(--text-dark)", fontSize: "1rem", lineHeight: 1.5 }}
+                >
+                  Ресторан «Дворянское гнездо»
+                </p>
+                <p className="font-sans-inv mt-1" style={{ color: "var(--text-light)", fontSize: "0.72rem", lineHeight: 1.6 }}>
+                  ул. Некрасовская, 53
+                </p>
+                <div className="flex items-center gap-1 mt-2">
+                  <Icon name="Phone" size={11} style={{ color: "var(--bordeaux)" }} />
+                  <span className="font-sans-inv" style={{ fontSize: "0.7rem", color: "var(--text-light)" }}>+7 (999) 123-45-67</span>
+                </div>
+                <div className="flex items-center gap-1 mt-1">
+                  <Icon name="Mail" size={11} style={{ color: "var(--bordeaux)" }} />
+                  <span className="font-sans-inv" style={{ fontSize: "0.7rem", color: "var(--text-light)" }}>wedding@example.com</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* === RIGHT CARD === */}
+        <div
+          className="inv-card w-full lg:w-7/12 px-8 py-10 opacity-0 animate-fade-in-up delay-200 flex flex-col"
+          style={{ animationFillMode: "forwards" }}
+        >
+          {/* Timeline */}
+          <SectionTitle>Тайминг</SectionTitle>
+          <WavyLine />
+
+          <div className="mt-4 space-y-0">
+            {[
+              { time: "14:00", title: "Сбор гостей", desc: "Просим взять с собой ваше хорошее настроение" },
+              { time: "15:00", title: "Церемония", desc: "Приготовьте ваши платочки для слёз счастья" },
+              { time: "16:30", title: "Банкет", desc: "Время для вкусной еды и зажигательных танцев" },
+            ].map((item, idx) => (
+              <div key={idx} className="flex items-start gap-5 py-4" style={{ borderBottom: idx < 2 ? "1px solid rgba(0,0,0,0.06)" : "none" }}>
+                <div className="flex-shrink-0 pt-1">
+                  <p
+                    className="font-cormorant"
+                    style={{ color: "var(--bordeaux)", fontSize: "1.4rem", fontWeight: 400, minWidth: 52 }}
+                  >
+                    {item.time}
+                  </p>
+                </div>
+                <div>
+                  <p
+                    className="font-script"
+                    style={{ color: "var(--text-dark)", fontSize: "1.35rem", lineHeight: 1.2 }}
+                  >
+                    {item.title}
+                  </p>
+                  <p
+                    className="font-cormorant mt-1"
+                    style={{ color: "var(--text-light)", fontSize: "0.9rem", fontStyle: "italic", lineHeight: 1.5 }}
+                  >
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6">
+            <WavyLine />
+          </div>
+
+          {/* Dress code */}
+          <div className="mt-6">
+            <SectionTitle>Дресс-код</SectionTitle>
+            <p
+              className="font-cormorant text-center leading-relaxed mb-5"
+              style={{ color: "var(--text-mid)", fontSize: "0.95rem", fontStyle: "italic" }}
+            >
+              Нам будет особенно приятно видеть вас в нарядах цветовой гаммы нашей свадьбы.
+              Для дам просим выбрать вечерние и коктейльные платья, для джентльменов уместным будет классический костюм с белой рубашкой.
+            </p>
+            <div className="flex gap-2 px-4">
+              <div className="swatch" style={{ background: "var(--bordeaux)" }} />
+              <div className="swatch" style={{ background: "var(--navy-blue)" }} />
+              <div className="swatch" style={{ background: "var(--sage)" }} />
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <WavyLine />
+          </div>
+
+          {/* Wishes */}
+          <div className="mt-6">
+            <SectionTitle>Пожелания</SectionTitle>
+            <p
+              className="font-cormorant text-center mb-4"
+              style={{ color: "var(--text-mid)", fontSize: "0.95rem", fontStyle: "italic", lineHeight: 1.6 }}
+            >
+              Наше мероприятие рассчитано на взрослую публику. Поэтому просим вас позаботиться о том, чтобы в этот вечер ваши дети были в надёжных руках!
+            </p>
+            <HeartDivider />
+            <p
+              className="font-cormorant text-center mb-4"
+              style={{ color: "var(--text-mid)", fontSize: "0.95rem", fontStyle: "italic", lineHeight: 1.6 }}
+            >
+              Приятным комплиментом для нас будет, если вместо цветов вы решите подарить нам бутылочку любимого напитка.
+            </p>
+            <HeartDivider />
+            <p
+              className="font-cormorant text-center mb-4"
+              style={{ color: "var(--text-mid)", fontSize: "0.95rem", fontStyle: "italic", lineHeight: 1.6 }}
+            >
+              От всего сердца просим вас воздержаться от криков «Горько!» и сохранить атмосферу семейного праздника.
+            </p>
+            <HeartDivider />
+            <p
+              className="font-cormorant text-center"
+              style={{ color: "var(--text-mid)", fontSize: "0.95rem", fontStyle: "italic", lineHeight: 1.6 }}
+            >
+              Просим подтвердить ваше присутствие до 1 июня 2025 года любым удобным для вас способом.
+            </p>
+          </div>
+
+          {/* RSVP */}
+          <div className="mt-8 pt-6" style={{ borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+            {!rsvpSent ? (
+              <div className="flex flex-col items-center gap-4">
+                <p
+                  className="font-script text-center"
+                  style={{ color: "var(--bordeaux)", fontSize: "1.8rem" }}
+                >
+                  Подтвердите участие
+                </p>
                 <input
                   type="text"
                   placeholder="Ваше имя"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  required
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  className="w-full max-w-xs px-4 py-3 text-sm outline-none font-sans-inv"
                   style={{
-                    background: "rgba(201,168,76,0.06)",
-                    border: "1px solid rgba(201,168,76,0.25)",
-                    color: "#F5E6C0",
+                    border: "1px solid rgba(123,28,46,0.25)",
+                    borderRadius: 2,
+                    color: "var(--text-dark)",
+                    background: "#fafafa",
                     fontFamily: "'Montserrat', sans-serif",
+                    fontSize: "0.8rem",
                   }}
-                  onFocus={(e) => (e.target.style.borderColor = "rgba(201,168,76,0.6)")}
-                  onBlur={(e) => (e.target.style.borderColor = "rgba(201,168,76,0.25)")}
                 />
-                <select
-                  value={form.guests}
-                  onChange={(e) => setForm({ ...form, guests: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                  style={{
-                    background: "rgba(201,168,76,0.06)",
-                    border: "1px solid rgba(201,168,76,0.25)",
-                    color: "#F5E6C0",
-                    fontFamily: "'Montserrat', sans-serif",
-                  }}
+                <button
+                  className="rsvp-btn"
+                  onClick={() => name.trim() && setRsvpSent(true)}
                 >
-                  <option value="1" style={{ background: "#141628" }}>1 гость</option>
-                  <option value="2" style={{ background: "#141628" }}>2 гостя</option>
-                  <option value="3" style={{ background: "#141628" }}>3 гостя</option>
-                  <option value="4" style={{ background: "#141628" }}>4+ гостей</option>
-                </select>
+                  Подтвердить
+                </button>
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                {(["yes", "no"] as const).map((opt) => (
-                  <button
-                    key={opt}
-                    type="button"
-                    onClick={() => setForm({ ...form, attend: opt })}
-                    className="py-3 rounded-xl text-xs uppercase tracking-[0.15em] transition-all"
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      background: form.attend === opt ? "rgba(201,168,76,0.2)" : "rgba(201,168,76,0.05)",
-                      border: form.attend === opt ? "1px solid rgba(201,168,76,0.6)" : "1px solid rgba(201,168,76,0.2)",
-                      color: form.attend === opt ? "var(--gold-light)" : "rgba(245,230,192,0.5)",
-                    }}
-                  >
-                    {opt === "yes" ? "✓ Приду" : "✗ Не смогу"}
-                  </button>
-                ))}
+            ) : (
+              <div className="text-center py-6">
+                <p className="font-script" style={{ color: "var(--bordeaux)", fontSize: "2rem" }}>
+                  Будем вас ждать!
+                </p>
+                <p className="font-cormorant mt-2" style={{ color: "var(--text-light)", fontStyle: "italic", fontSize: "0.95rem" }}>
+                  До встречи на торжестве ♡
+                </p>
               </div>
+            )}
 
-              <button type="submit" className="rsvp-btn w-full py-4 rounded-xl text-sm animate-glow">
-                Подтвердить участие
-              </button>
-            </form>
-          ) : (
-            <div
-              className="text-center py-8 rounded-2xl"
-              style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.3)" }}
-            >
-              <div className="text-3xl mb-3" style={{ color: "var(--gold)" }}>✦</div>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: "1.4rem", color: "var(--gold-light)", fontStyle: "italic" }}>
-                Спасибо! До встречи на торжестве
+            {!rsvpSent && (
+              <p
+                className="font-script text-center mt-8"
+                style={{ color: "var(--bordeaux)", fontSize: "2rem", opacity: 0.8 }}
+              >
+                Будем вас ждать!
               </p>
-              <p className="text-xs mt-2" style={{ color: "rgba(245,230,192,0.4)", fontFamily: "'Montserrat', sans-serif" }}>
-                Мы свяжемся с вами для уточнения деталей
-              </p>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        <div
-          className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-10 pt-8 opacity-0 animate-fade-in-up delay-1000"
-          style={{ borderTop: "1px solid rgba(201,168,76,0.15)", animationFillMode: "forwards" }}
-        >
-          <a
-            href="tel:+79991234567"
-            className="flex items-center gap-2 text-sm transition-opacity hover:opacity-80"
-            style={{ color: "rgba(245,230,192,0.5)", fontFamily: "'Montserrat', sans-serif" }}
-          >
-            <Icon name="Phone" size={14} style={{ color: "var(--gold)" }} />
-            +7 (999) 123-45-67
-          </a>
-          <span style={{ color: "rgba(201,168,76,0.3)" }}>·</span>
-          <a
-            href="mailto:wedding@example.com"
-            className="flex items-center gap-2 text-sm transition-opacity hover:opacity-80"
-            style={{ color: "rgba(245,230,192,0.5)", fontFamily: "'Montserrat', sans-serif" }}
-          >
-            <Icon name="Mail" size={14} style={{ color: "var(--gold)" }} />
-            wedding@example.com
-          </a>
-        </div>
-
-        <p
-          className="text-center mt-6 opacity-0 animate-fade-in delay-1000"
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontStyle: "italic",
-            color: "rgba(201,168,76,0.3)",
-            fontSize: "0.85rem",
-            letterSpacing: "0.08em",
-            animationFillMode: "forwards",
-          }}
-        >
-          «Любовь никогда не перестаёт»
-        </p>
       </div>
     </div>
   );
